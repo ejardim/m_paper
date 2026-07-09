@@ -39,7 +39,7 @@ lst0 <- lapply(output.all, function(x){
   f$metric <- "F"
 
   obj0 <- lapply(x, function(y){
-		fbar(y)[,"2023"]/refpts(brp(FLBRP(y)))["fmax","harvest"]
+		yearMeans(fbar(y)[,ac(2021:2023)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
 	})
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]
@@ -87,7 +87,7 @@ lst0 <- lapply(output.all, function(x){
   f$metric <- "F"
 
   obj0 <- lapply(x, function(y){
-		fbar(y)[,"2024"]/refpts(brp(FLBRP(y)))["fmax","harvest"]
+		yearMeans(fbar(y)[,ac(2022:2024)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
 	})
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]
@@ -135,7 +135,7 @@ lst0 <- lapply(output.all, function(x){
   f$metric <- "F"
 
   obj0 <- lapply(x, function(y){
-		fbar(y)[,"2024"]/refpts(brp(FLBRP(y)))["fmax","harvest"]
+		yearMeans(fbar(y)[,ac(2023:2025)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
 	})
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]

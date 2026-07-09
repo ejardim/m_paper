@@ -1,0 +1,60 @@
+\begin{thebibliography}{10}
+
+\bibitem{burnham2002}
+Kenneth~P. Burnham and David~R. Anderson.
+\newblock {\em Model Selection and Multimodel Inference: A Practical
+  Information-Theoretic Approach}.
+\newblock Springer, New York, 2nd edition, 2002.
+
+\bibitem{Gislason10}
+Hannes Gislason, Niels Daan, Jake~C. Rice, and John~G. Pope.
+\newblock Size, growth, temperature and the natural mortality of fish.
+\newblock {\em Fish and Fisheries}, 11(2):149--170, 2010.
+
+\bibitem{Haddon11}
+Malcolm Haddon.
+\newblock {\em Modelling and quantitative methods in fisheries}.
+\newblock Chapman and Hall/CRC, 2nd edition, 2011.
+
+\bibitem{HilbornMangel97}
+Ray Hilborn and Marc Mangel.
+\newblock {\em The ecological detective: confronting models with data}.
+\newblock Princeton University Press, 1997.
+
+\bibitem{Jensen96}
+Alvin~L. Jensen.
+\newblock Standardizing the use of the natural mortality rate in stock
+  assessment.
+\newblock {\em Fisheries Management and Ecology}, 3(1):1--11, 1996.
+
+\bibitem{kenchington2014}
+Trevor~J Kenchington.
+\newblock Natural mortality estimators for information-limited fisheries.
+\newblock {\em Fish and Fisheries}, 15(4):533--562, 2014.
+
+\bibitem{Liu22}
+Wenjing Liu, Kevin~R. Piner, and Mark~C. Siple.
+\newblock Assessing the robustness of stock assessment models to time-varying
+  natural mortality with a management strategy evaluation.
+\newblock {\em Fisheries Research}, 251:106310, 2022.
+
+\bibitem{Punt21}
+André~E. Punt, Claudio Castillo-Jordán, Owen~S. Hamel, Jason~M. Cope, Mark~N.
+  Maunder, and James~N. Ianelli.
+\newblock Consequences of error in natural mortality and its estimation in
+  stock assessment models.
+\newblock {\em Fisheries Research}, 233:105759, 2021.
+
+\bibitem{QuinnDeriso99}
+Terry~J. Quinn and Richard~B. Deriso.
+\newblock {\em Quantitative fish dynamics}.
+\newblock Oxford University Press, 1999.
+
+\bibitem{then2014}
+Amy~Y Then, John~M Hoenig, Norman~G Hall, David~A Hewitt, and Handling editor:
+  Ernesto~Jardim.
+\newblock Evaluating the predictive performance of empirical estimators of
+  natural mortality rate using information on over 200 fish species.
+\newblock {\em ICES Journal of Marine Science}, 72(1):82--92, 2014.
+
+\end{thebibliography}

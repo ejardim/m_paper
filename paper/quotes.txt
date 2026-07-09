@@ -1,0 +1,8 @@
+magnusson 2013 A simulation study can use a relatively complex operating model to generate the simulated datasets and a simpler assessment model to fit those datasets, or use the same model to violate fewer assumptions. 
+
+M robustness tests uses the same approach as Magnusson for the simulation study:
+condition OM -> OEM to generate stochastic datasets for assessment -> fit estimator to each dataset -> compute confidence interval for statistic of interest (SoI) -> compute probability of OM's SoI to be within the estimator's CI for the same SoI.  
+
+Check Andre's 2025 paper in fisheries research 
+
+max age by taylor 1958

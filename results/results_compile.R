@@ -158,3 +158,18 @@ results <- rbind(results, results.df)
 
 save(results, file="results_dt.rda")
 
+ccc_dt <- results[, {
+  vx <- var(mp); vy <- var(om)
+  cxy <- cov(mp, om)
+  mx <- mean(mp); my <- mean(om)
+  .(ccc = round(2 * cxy / (vx + vy + (mx - my)^2), 2), ccc_thr = (2 * cxy / (vx + vy + (mx - my)^2))>=0.95, n = .N)
+}, by = .(stock, metric, mp_name, om_name)]
+
+xyplot(ccc~mp_name|stock*om_name, groups="metric", data=ccc_dt)
+
+ccc_wide <- dcast(
+  ccc_dt,
+  stock + metric + mp_name ~ om_name,
+  value.var = "ccc_thr"
+)
+

@@ -16,14 +16,14 @@ library(reshape2)
 library(knitr)
 library(parallel)
 # stock
-nep.stk <- readRDS("../NEP_06/NEP_6_STK.RDS")
+nep.stk <- readRDS("NEP_6_STK.RDS")
 ages  <- as.numeric(dimnames(m(nep.stk))$age)
 years <- as.numeric(dimnames(m(nep.stk))$year)
 rng <- range(nep.stk)
 # weights at age
 wa <- yearMeans(stock.wt(nep.stk))
 # index
-nep.idx <- readRDS("../NEP_06/NEP_6_IDX.RDS")
+nep.idx <- readRDS("NEP_6_IDX.RDS")
 
 # number of cores
 cores <- floor(0.8*detectCores())

@@ -15,14 +15,14 @@ library(reshape2)
 library(knitr)
 library(FLBRP)
 # stock
-load("../data/HKE_1_5_6_7_stk_input_assess.Rdata")
+load("data/HKE_1_5_6_7_stk_input_assess.Rdata")
 ages  <- as.numeric(dimnames(m(hke.stk))$age)
 years <- as.numeric(dimnames(m(hke.stk))$year)
 rng <- range(hke.stk)
 # weights at age
 wa <- yearMeans(stock.wt(hke.stk))
 # index
-load("../data/HKE_1_5_6_7_idx_input_assess.Rdata")
+load("data/HKE_1_5_6_7_idx_input_assess.Rdata")
 #load("../data/FLIndices_0.RData") # medits data fixed
 hke.idx <- trim(hke.idx, age=0:4, year=years)
 # number of cores

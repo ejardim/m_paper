@@ -38,9 +38,15 @@ lst0 <- lapply(output.all, function(x){
   f <- subset(obj0, obj0$qname!="om")
   f$metric <- "F"
 
+  rp <- refpts(FLBRP())[1]
+  dimnames(rp)$refpt <- "spr.40"
+
   obj0 <- lapply(x, function(y){
-		yearMeans(fbar(y)[,ac(2021:2023)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
-	})
+    flrp <- FLBRP(y)
+    refpts(flrp) <- rp
+    rfp <- refpts(brp(flrp))[,"harvest"]
+ 	yearMeans(fbar(y)[,ac(2021:2023)])/rfp
+  })
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]
   s <- subset(obj0, obj0$qname!="om")
@@ -86,9 +92,15 @@ lst0 <- lapply(output.all, function(x){
   f <- subset(obj0, obj0$qname!="om")
   f$metric <- "F"
 
+  rp <- refpts(FLBRP())[1]
+  dimnames(rp)$refpt <- "spr.40"
+
   obj0 <- lapply(x, function(y){
-		yearMeans(fbar(y)[,ac(2022:2024)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
-	})
+    flrp <- FLBRP(y)
+    refpts(flrp) <- rp
+    rfp <- refpts(brp(flrp))[,"harvest"]
+ 	yearMeans(fbar(y)[,ac(2021:2023)])/rfp
+  })
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]
   s <- subset(obj0, obj0$qname!="om")
@@ -134,9 +146,15 @@ lst0 <- lapply(output.all, function(x){
   f <- subset(obj0, obj0$qname!="om")
   f$metric <- "F"
 
+  rp <- refpts(FLBRP())[1]
+  dimnames(rp)$refpt <- "spr.40"
+
   obj0 <- lapply(x, function(y){
-		yearMeans(fbar(y)[,ac(2023:2025)])/refpts(brp(FLBRP(y)))["fmax","harvest"]
-	})
+    flrp <- FLBRP(y)
+    refpts(flrp) <- rp
+    rfp <- refpts(brp(flrp))[,"harvest"]
+ 	yearMeans(fbar(y)[,ac(2023:2025)])/rfp
+  })
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]
   s <- subset(obj0, obj0$qname!="om")

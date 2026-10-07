@@ -26,7 +26,7 @@ wa <- yearMeans(stock.wt(nep.stk))
 nep.idx <- readRDS("NEP_6_IDX.RDS")
 
 # number of cores
-cores <- floor(0.8*detectCores())
+cores <- 5
 
 #------------------------------------------------------------------
 # growth model and parameters
@@ -99,32 +99,25 @@ xyplot(value ~ age, groups = model, data = df0, type = "b",
 dev.off()
 
 #------------------------------------------------------------------
-# Set up a4a stock assessment model #------------------------------------------------------------------
+# Set up a4a stock assessment model
+# the fmodel was set based on tests of convergence
+#------------------------------------------------------------------
 
-fmod <- ~factor(age) + factor(year)
+fmod <- ~  s(age, k = 6)  + s(year, k = 8) + ti(age, year, k = c(6, 8))
 qmod <- list(~factor(replace(age, age > 4, 4)))
 srmod <- ~s(year, k = 4)
 ## mcmc set up
 # random seed
 rs <- 123
 # number of iters
-it <- 500
-# thinning
-mcs <- 1000
-# burnin
-burnin <- 300
-# control file
-mc <- SCAMCMC(mcmc=mcs*(it+burnin), mcsave=mcs, mcseed=rs)
+it <- 250
 
 #------------------------------------------------------------------
 # OM = current #------------------------------------------------------------------
 
 ## Operating model
 om.c <- nep.stk
-# fit <- sca(om.c, hke.idx, fmodel=fmod, qmodel=qmod, fit="MCMC", mc=mc)
-# # remove mcscale burnin period
-# fit <- burnin(fit, burnin)
-fit <- simulate(sca(om.c, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs)
+fit <- simulate(sca(om.c, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.c <- om.c+fit
@@ -160,62 +153,11 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel=list(srmod),fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel=list(srmod), workers=cores)
 
 ### output (add om)
 output.c <- stks + fits
 output.c <- FLStocks(c(output.c, FLStocks(om=om.c)))
-
-### ======================================================================= ###
-# The current is CW so I remove this part
-### ======================================================================= ###
-# #------------------------------------------------------------------
-# # OM = chen watanabe #------------------------------------------------------------------
-# 
-# ## Operating model
-# om.cw <- hke.stk
-# m(om.cw)[] <- m.cw
-# fit <- simulate(sca(om.cw, hke.idx, fmodel=fmod, qmodel=qmod), it, seed=rs)
-# 
-# om.cw <- om.cw+fit
-# 
-# ## OEM
-# stk.oem <- om.cw
-# idx.oem <- hke.idx
-# index(idx.oem) <- index(fit)[[1]]
-# idx.oem <- FLIndices(idx=idx.oem)
-# 
-# ## MP
-# 
-# ### current
-# stk.c <- stk.oem
-# m(stk.c)[] <- m.c
-# 
-# ### chen watanabe
-# stk.cw <- stk.oem
-# m(stk.cw)[] <- m.cw
-# 
-# ### Then
-# stk.t <- stk.oem
-# m(stk.t)[] <- m.t
-# 
-# ### Lorenz
-# stk.l <- stk.oem
-# m(stk.l)[] <- m.l
-# 
-# ### Brodziak
-# stk.b <- stk.oem
-# m(stk.b)[] <- m.b
-# 
-# ### call sca in parallel
-# stks <- FLStocks(c=stk.c, cw=stk.cw, t=stk.t, l=stk.l, b=stk.b)
-# idxs <- list(c=idx.oem, cw=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-# fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), fit="MP", workers=cores)
-# 
-# ### output
-# output.cw <- stks + fits
-# output.cw <- FLStocks(c(output.cw, FLStocks(om=om.cw)))
-### ======================================================================= ###
 
 #------------------------------------------------------------------
 # OM = then #------------------------------------------------------------------
@@ -223,7 +165,7 @@ output.c <- FLStocks(c(output.c, FLStocks(om=om.c)))
 ## Operating model
 om.t <- nep.stk
 m(om.t)[] <- m.t
-fit <- simulate(sca(om.t, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs)
+fit <- simulate(sca(om.t, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs, obserror=TRUE)
 
 om.t <- om.t+fit
 
@@ -258,7 +200,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel=list(srmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel=list(srmod), workers=cores)
 
 ### output
 output.t <- stks + fits
@@ -270,7 +212,7 @@ output.t <- FLStocks(c(output.t, FLStocks(om=om.t)))
 ## Operating model
 om.l <- nep.stk
 m(om.l)[] <- m.l
-fit <- simulate(sca(om.l, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs)
+fit <- simulate(sca(om.l, nep.idx, fmodel=fmod, qmodel=qmod, srmodel = srmod), it, seed=rs, obserror=TRUE)
 
 om.l <- om.l+fit
 
@@ -305,7 +247,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel = list(srmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel = list(srmod), workers=cores)
 
 ### output
 output.l <- stks + fits
@@ -317,7 +259,7 @@ output.l <- FLStocks(c(output.l, FLStocks(om=om.l)))
 ## Operating model
 om.b <- nep.stk
 m(om.b)[] <- m.b
-fit <- simulate(sca(om.b, nep.idx, fmodel=fmod, qmodel=qmod, srmodel=srmod), it, seed=rs)
+fit <- simulate(sca(om.b, nep.idx, fmodel=fmod, qmodel=qmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 om.b <- om.b+fit
 
@@ -352,7 +294,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel = list(srmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), qmodel=list(qmod), srmodel = list(srmod), workers=cores)
 
 ### output
 output.b <- stks + fits
@@ -507,7 +449,7 @@ lst0 <- lapply(output.all, function(x){
   f$metric <- "F"
 
   obj0 <- lapply(x, function(y){
-		fbar(y)[,"2023"]/refpts(brp(FLBRP(y)))["fmax","harvest"]
+		fbar(y)[,"2023"]/refpts(brp(FLBRP(y)))["spr.30","harvest"]
 	})
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]

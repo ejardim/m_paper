@@ -42,6 +42,9 @@ range(pil.idx$DEPM)[c("min", "max", "startf", "endf")] <- c(1, rng["max"], 0, 1/
 names(dimnames(pil.idx$recruits))[1] <- "age"
 range(pil.idx$recruits)[c("startf", "endf")] <- c(9/12, 10/12)
 
+# remove index 2, it creates a mess in the fit. All refits fail
+pil.idx <- pil.idx[-2]
+
 #------------------------------------------------------------------
 # growth model and parameters
 #------------------------------------------------------------------
@@ -113,14 +116,15 @@ dev.off()
 #------------------------------------------------------------------
 # Set up a4a stock assessment model #------------------------------------------------------------------
 
-# model for f
-fmod <- ~s(age, k = 4) + s(year, k = 21) + te(age, year, k = c(3, 5))
+# models
+fmod <- ~s(age, k = 5) + s(year, k = 24) + ti(age, year, k = c(5, 24))
+srmod <- ~factor(replace(year, year<1997, 1997))
 
 # number of iters
-it <- 500
+it <- 250
 
 # random seed
-rs <- 123
+rs <- 001199
 
 # number of cores
 cores <- 5
@@ -131,7 +135,7 @@ cores <- 5
 
 ## Operating model
 om.c <- pil.stk
-fit <- simulate(sca(om.c, pil.idx, fmodel=fmod), it, seed=rs)
+fit <- simulate(sca(om.c, pil.idx, fmodel=fmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.c <- om.c+fit
@@ -166,7 +170,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, ch=stk.ch, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, ch=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), srmodel=list(srmod), workers=cores)
 
 ### output (add om)
 output.c <- stks + fits
@@ -179,7 +183,7 @@ output.c <- FLStocks(c(output.c, FLStocks(om=om.c)))
 ## Operating model
 om.ch <- pil.stk
 m(om.ch)[] <- m.ch
-fit <- simulate(sca(om.ch, pil.idx, fmodel=fmod), it, seed=rs)
+fit <- simulate(sca(om.ch, pil.idx, fmodel=fmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.ch <- om.ch+fit
@@ -212,7 +216,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, ch=stk.ch, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, cw=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), srmodel=list(srmod), workers=cores)
 
 ### output
 output.ch <- stks + fits
@@ -225,7 +229,7 @@ output.ch <- FLStocks(c(output.ch, FLStocks(om=om.ch)))
 ## Operating model
 om.t <- pil.stk
 m(om.t)[] <- m.t
-fit <- simulate(sca(om.t, pil.idx, fmodel=fmod), it, seed=rs)
+fit <- simulate(sca(om.t, pil.idx, fmodel=fmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.t <- om.t+fit
@@ -259,7 +263,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, ch=stk.ch, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, cw=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), srmodel=list(srmod), workers=cores)
 
 ### output
 output.t <- stks + fits
@@ -272,7 +276,7 @@ output.t <- FLStocks(c(output.t, FLStocks(om=om.t)))
 ## Operating model
 om.l <- pil.stk
 m(om.l)[] <- m.l
-fit <- simulate(sca(om.l, pil.idx, fmodel=fmod), it, seed=rs)
+fit <- simulate(sca(om.l, pil.idx, fmodel=fmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.l <- om.l+fit
@@ -305,7 +309,7 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, ch=stk.ch, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, cw=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), srmodel=list(srmod), workers=cores)
 
 ### output
 output.l <- stks + fits
@@ -318,7 +322,7 @@ output.l <- FLStocks(c(output.l, FLStocks(om=om.l)))
 ## Operating model
 om.b <- pil.stk
 m(om.b)[] <- m.b
-fit <- simulate(sca(om.b, pil.idx, fmodel=fmod), it, seed=rs)
+fit <- simulate(sca(om.b, pil.idx, fmodel=fmod, srmodel=srmod), it, seed=rs, obserror=TRUE)
 
 # update stock
 om.b <- om.b+fit
@@ -351,12 +355,11 @@ m(stk.b)[] <- m.b
 ### call sca in parallel
 stks <- FLStocks(c=stk.c, ch=stk.ch, t=stk.t, l=stk.l, b=stk.b)
 idxs <- list(c=idx.oem, cw=idx.oem, t=idx.oem, l=idx.oem, b=idx.oem)
-fits <- scas(stks, idxs, fmodel=list(fmod), fit="MP", workers=cores)
+fits <- scas(stks, idxs, fmodel=list(fmod), srmodel=list(srmod), workers=cores)
 
 ### output
 output.b <- stks + fits
 output.b <- FLStocks(c(output.b, FLStocks(om=om.b)))
-
 
 #------------------------------------------------------------------
 # Plots of scenarios
@@ -510,7 +513,7 @@ lst0 <- lapply(output.all, function(x){
   f$metric <- "F"
 
   obj0 <- lapply(x, function(y){
-		fbar(y)[,"2023"]/refpts(brp(FLBRP(y)))["fmax","harvest"]
+		fbar(y)[,"2023"]/refpts(brp(FLBRP(y)))["spr.30","harvest"]
 	})
   obj0 <- as.data.frame(obj0)
   obj0$om <- obj0[obj0$qname=="om","data"]

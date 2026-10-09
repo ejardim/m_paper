@@ -76,6 +76,16 @@ xyplot(log(mp)~log(om)|mp_name*om_name, data=subset(results, metric=="S" & stock
 dev.off()
 
 #------------------------------------------------------------------
+# convergence
+#------------------------------------------------------------------
+
+conv.dt <- results[metric=="S",.(conv = mean(is.na(mp))), by = .(om_name, mp_name, stock)]
+
+# remove non-convergence
+to_remove <- results[metric == "S" & is.na(mp), .(iter, mp_name, om_name, stock)]
+results <- results[!to_remove, on = .(iter, mp_name, om_name, stock)]
+
+#------------------------------------------------------------------
 # corcondance correlation coeficient
 #------------------------------------------------------------------
 
@@ -94,7 +104,6 @@ xyplot(ccc~mp_name|stock*om_name, groups="metric", data=summ_metrics)
 
 dcast(summ_metrics, om_name + stock + metric ~mp_name, value.var = "mae")
 dcast(summ_metrics, stock + metric + om_name ~mp_name, value.var = "ccc")
-
 
 minmax_dt <-
 

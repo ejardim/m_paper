@@ -49,12 +49,6 @@ pil.idx <- pil.idx[-2]
 # growth model and parameters
 #------------------------------------------------------------------
 
-ages <- 0:6
-# length at age
-la <- c(11.4,15.3,18.1,19.9,21.1,21.8,22.8)
-# weight at age
-wa <- c(0.021, 0.043, 0.052, 0.067, 0.071, 0.076, 0.082)
-
 #From ICES WKPELA 2017
 k <- 0.44
 linf <- 23.2
@@ -66,9 +60,9 @@ maxage <- t0 + 3/k
 #Derived from values in WKPELA 2017
 l50 <- 15.32
 
-# a <- 0.00677
-# b <- 3.0325
-# lmin <- 5
+a <- 0.00677
+b <- 3.0325
+lmin <- 5
 
 #VBGF function Bertalanffy Growth Function (VBGF):
 pil.vb <- a4aGr(
@@ -76,6 +70,14 @@ pil.vb <- a4aGr(
   grInvMod=~t0-1/k*log(1-len/linf),
   params=FLPar(linf=linf, k=k, t0=t0, units=c("cm","year-1","year"))
 )
+
+# ages
+ages <- 0:6
+# length at age
+la <- c(11.4,15.3,18.1,19.9,21.1,21.8,22.8)
+#la <- c(predict(pil.vb, t=ages+0.5))
+# weight at age
+wa <- a/1000*la^b
 
 #------------------------------------------------------------------
 # M models

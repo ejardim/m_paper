@@ -76,7 +76,6 @@ mmr_om
 # mmr
 # # only hake in B is different
 
-
 # ALT: bias and spread metric
 rr <- aggregate(d ~ stock + metric + om_name + mp_name, data = d0,
                 FUN = function(d) sqrt(median(d)^2 + mad(d)^2))

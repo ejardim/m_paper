@@ -88,7 +88,7 @@ df0 <- lapply(df0, "[", j=1)
 df0 <- do.call(cbind, df0)
 df0 <- melt(df0, c("age", "model"))
 df0$age <- df0$age-0.5
-png("../paper/mmodels.png", 800, 800)
+png("mmodels.png", 800, 800)
 xyplot(value ~ age, groups = model, data = df0, type = "b",
   ylab = "M", auto.key = list(space = "top", columns = 5),
   par.settings = list(
